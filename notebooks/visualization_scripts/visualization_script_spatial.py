@@ -3,11 +3,10 @@
 
 from pathlib import Path
 
-import plotly.express as px
 import plotly.graph_objects as go
 import xarray as xr
+from plotly_resampler import FigureResampler
 
-# TD: make timerange dynamic
 REL_PATH_VOLUME = Path("TIMESERIES_VOLUME/DWS.volume.20000101-20001201.nc")
 REL_PATH_AGGREGATES_S = Path("AGGREGATES/DWS200m.aggregates.S.20000101-20001201.nc")
 REL_PATH_AGGREGATES_T = Path("AGGREGATES/DWS200m.aggregates.T.20000101-20001201.nc")
@@ -22,7 +21,7 @@ def xaxes_buttons():
                 dict(count=1, label="1y", step="year", stepmode="backward"),
                 dict(count=5, label="5y", step="year", stepmode="backward"),
                 dict(count=10, label="10y", step="year", stepmode="backward"),
-                dict(step="all"),
+                # dict(step="all"),  # Doesn't work with resampler
             ]
         )
     )
@@ -31,14 +30,15 @@ def xaxes_buttons():
 def plot_volume(path_root: str | Path):
     ds_volume = xr.open_dataset(path_root / REL_PATH_VOLUME)
 
-    fig = px.line(ds_volume, y="volume", title="Volume in the DWS")
+    fig = FigureResampler(go.Figure())
+    fig.add_trace(go.Scattergl(y=ds_volume["volume"].values, x=ds_volume["time"].values))
 
     layout = dict(
+        title="Volume in the DWS",
         yaxis=dict(title=dict(text="Volume (m<sup>3</sup>)")),
         xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
         hovermode="x",
     )
-
     fig.update_layout(layout)
 
     return fig
