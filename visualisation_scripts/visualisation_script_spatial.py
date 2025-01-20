@@ -1,58 +1,87 @@
-### Imports
-import plotly.express as px
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from pathlib import Path
+
 import plotly.graph_objects as go
 import xarray as xr
+from plotly_resampler import FigureResampler
 
-# TD: make timerange dynamic
-REL_PATH_VOLUME = "TIMESERIES_VOLUME/DWS.volume.20000101-20001201.nc"
-REL_PATH_AGGREGATES_S = "AGGREGATES/DWS200m.aggregates.S.20000101-20001201.nc"
-REL_PATH_AGGREGATES_T = "AGGREGATES/DWS200m.aggregates.T.20000101-20001201.nc"
+REL_PATH_VOLUME = Path("TIMESERIES_VOLUME/DWS.volume.20000101-20001201.nc")
+REL_PATH_AGGREGATES_S = Path("AGGREGATES/DWS200m.aggregates.S.20000101-20001201.nc")
+REL_PATH_AGGREGATES_T = Path("AGGREGATES/DWS200m.aggregates.T.20000101-20001201.nc")
 
 
 def xaxes_buttons():
     return dict(
-        rangeselector=dict(
-            buttons=list(
-                [
-                    dict(count=1, label="1m", step="month", stepmode="backward"),
-                    dict(count=6, label="6m", step="month", stepmode="backward"),
-                    dict(count=1, label="1y", step="year", stepmode="backward"),
-                    dict(count=5, label="5y", step="year", stepmode="backward"),
-                    dict(count=10, label="10y", step="year", stepmode="backward"),
-                    dict(step="all"),
-                ]
-            )
-        ),
+        buttons=list(
+            [
+                dict(count=1, label="1m", step="month", stepmode="backward"),
+                dict(count=6, label="6m", step="month", stepmode="backward"),
+                dict(count=1, label="1y", step="year", stepmode="backward"),
+                dict(count=5, label="5y", step="year", stepmode="backward"),
+                dict(count=10, label="10y", step="year", stepmode="backward"),
+                # dict(step="all"),  # Doesn't work with resampler
+            ]
+        )
     )
 
 
-def plot_volume(path_root):
-    ds_volume = xr.open_dataset(path_root + REL_PATH_VOLUME)
+def plot_volume(path_root: str | Path):
+    ds_volume = xr.open_dataset(path_root / REL_PATH_VOLUME)
 
-    fig = px.line(ds_volume, y="volume", title="Volume in the DWS")
+    fig = FigureResampler(go.Figure())
+    fig.add_trace(go.Scattergl(y=ds_volume["volume"].values, x=ds_volume["time"].values))
 
     layout = dict(
+        title="Volume in the DWS",
         yaxis=dict(title=dict(text="Volume (m<sup>3</sup>)")),
-        xaxis=dict(title=dict(text="Date")),
+        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
         hovermode="x",
     )
+    fig.update_layout(layout)
 
-    xaxes_buts = xaxes_buttons()
-    xaxes_temp = dict(rangeslider_visible=True)
-    xaxes = {**xaxes_buts, **xaxes_temp}
-
-    return (fig, layout, xaxes)
+    return fig
 
 
-def plot_temperature(path_root):
-    ds_temperature = xr.open_dataset(path_root + REL_PATH_AGGREGATES_T)
+def plot_temperature(path_root: str | Path):
+    ds_temperature = xr.open_dataset(path_root / REL_PATH_AGGREGATES_T)
 
     T_mean = ds_temperature["T_mean"].values
     T_std = ds_temperature["T_std"].values
     time = ds_temperature["time"].values
 
+    layout = dict(
+        yaxis=dict(title=dict(text="Temperature (°C)")),
+        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
+        hovermode="x",
+        updatemenus=[
+            dict(
+                type="buttons",
+                direction="left",
+                buttons=list(
+                    [
+                        dict(
+                            method="restyle",
+                            label="Toggle uncertainty",
+                            visible=True,
+                            args=[{"visible": True}, [1, 2]],
+                            args2=[{"visible": "legendonly"}, [1, 2]],
+                        ),
+                    ]
+                ),
+                pad={"r": 10, "t": 10},
+                showactive=True,
+                x=1.08,
+                xanchor="center",
+                y=0.6,
+                yanchor="middle",
+            ),
+        ],
+    )
+
     fig = go.Figure(
-        [
+        data=[
             go.Scatter(
                 name="Average temperature",
                 x=time,
@@ -80,12 +109,23 @@ def plot_temperature(path_root):
                 fill="tonexty",
                 showlegend=False,
             ),
-        ]
+        ],
+        layout=layout,
     )
 
+    return fig
+
+
+def plot_salinity(path_root: str | Path):
+    ds_salinity = xr.open_dataset(path_root / REL_PATH_AGGREGATES_S)
+
+    S_mean = ds_salinity["S_mean"].values
+    S_std = ds_salinity["S_std"].values
+    time = ds_salinity["time"].values
+
     layout = dict(
-        yaxis=dict(title=dict(text="Temperature (°C)")),
-        xaxis=dict(title=dict(text="Date")),
+        yaxis=dict(title=dict(text="Salinity (g kg<sup>-1</sup>)")),
+        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
         hovermode="x",
         updatemenus=[
             dict(
@@ -112,22 +152,8 @@ def plot_temperature(path_root):
         ],
     )
 
-    xaxes_buts = xaxes_buttons()
-    xaxes_temp = dict(rangeslider_visible=True)
-    xaxes = {**xaxes_buts, **xaxes_temp}
-
-    return (fig, layout, xaxes)
-
-
-def plot_salinity(path_root):
-    ds_salinity = xr.open_dataset(path_root + REL_PATH_AGGREGATES_S)
-
-    S_mean = ds_salinity["S_mean"].values
-    S_std = ds_salinity["S_std"].values
-    time = ds_salinity["time"].values
-
     fig = go.Figure(
-        [
+        data=[
             go.Scatter(
                 name="Average salinity",
                 x=time,
@@ -155,43 +181,11 @@ def plot_salinity(path_root):
                 fill="tonexty",
                 showlegend=False,
             ),
-        ]
-    )
-
-    layout = dict(
-        yaxis=dict(title=dict(text="Salinity (g kg<sup>-1</sup>)")),
-        xaxis=dict(title=dict(text="Date")),
-        hovermode="x",
-        updatemenus=[
-            dict(
-                type="buttons",
-                direction="left",
-                buttons=list(
-                    [
-                        dict(
-                            method="restyle",
-                            label="Toggle uncertainty",
-                            visible=True,
-                            args=[{"visible": True}, [1, 2]],
-                            args2=[{"visible": "legendonly"}, [1, 2]],
-                        ),
-                    ]
-                ),
-                pad={"r": 10, "t": 10},
-                showactive=True,
-                x=1.08,
-                xanchor="center",
-                y=0.6,
-                yanchor="middle",
-            ),
         ],
+        layout=layout,
     )
 
-    xaxes_buts = xaxes_buttons()
-    xaxes_temp = dict(rangeslider_visible=True)
-    xaxes = {**xaxes_buts, **xaxes_temp}
-
-    return (fig, layout, xaxes)
+    return fig
 
 
 if __name__ == "main":
