@@ -1,0 +1,9 @@
+name: env_dws_v
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - xarray
+  - pip
+  - plotly
