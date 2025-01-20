@@ -4,12 +4,12 @@
 from pathlib import Path
 
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 import xarray as xr
+from plotly.express.colors import qualitative
 from plotly_resampler import FigureResampler
 
-COLOUR_PALET = px.colors.qualitative.Dark24
+COLOUR_PALET = qualitative.Dark24
 REL_PATH_RIVERS = Path("TIMESERIES_RIVERS/rivers_volume_flux.nc")
 
 
@@ -22,7 +22,7 @@ def xaxes_buttons():
                 dict(count=1, label="1y", step="year", stepmode="backward"),
                 dict(count=5, label="5y", step="year", stepmode="backward"),
                 dict(count=10, label="10y", step="year", stepmode="backward"),
-                dict(step="all"),
+                # dict(step="all"),
             ]
         )
     )
