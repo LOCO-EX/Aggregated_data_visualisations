@@ -4,18 +4,33 @@ import xarray as xr
 from datetime import timedelta
 import plotly.express as px
 import pandas as pd
+import plotly.graph_objects as go
 
 ### Constants
-REL_PATH_AVERAGES = "data/15_days_avg_std.nc"
+# REL_PATH_AVERAGES = "data/15_days_avg_std.nc"
+# BOUNDARIES_DWS = "data/dws_boundaries_contour0.nc"
+URL = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"
+URL_DATA = "https://opendap.4tu.nl/thredds/catalog/data2/test/spatial/catalog.html"
 
 
 ### Functions
+def read_data_from_opendap_test():
+    """
+    Read the data from the opendap server.
+    """
+    # Load the data
+    ds = xr.open_dataset(URL)
+    print(f"File from {URL_DATA} opened successfully.")
+    print(ds)
+    ds.close()
+
+
 def display_start_end_dates():
     """
     Display the start and end dates of the available data.
     """
     # Load the data
-    ds = xr.open_dataset(REL_PATH_AVERAGES)
+    ds = xr.open_dataset(URL)
 
     # Extract the start and end dates
     delta_left = timedelta(days=7.5)
@@ -47,7 +62,11 @@ def display_variable(start_date, end_date, variable_name):
         The name of the variable to display. It should be one of 'S' (salinity) or 'T' (temperature).
     """
     # Load the data
-    ds = xr.open_dataset(REL_PATH_AVERAGES)
+    ds = xr.open_dataset(URL)
+    # bound = xr.open_dataset(BOUNDARIES_DWS)
+
+    # Extract boundary points
+    # boundary_points = bound.bdr_dws.values
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
@@ -73,6 +92,7 @@ def display_variable(start_date, end_date, variable_name):
         if variable_name == "S"
         else np.flip(ds["T_sd"].values[st_index : end_index + 1], axis=1)
     )
+    # Add border to avg and sd respectively
 
     time_steps_update = time_steps[st_index:end_index]
     merged_data = np.stack([avg, sd], axis=1)
@@ -90,6 +110,26 @@ def display_variable(start_date, end_date, variable_name):
         + " : 15 days average (in facet_col=0) and standard deviation (in facet_col=1)",
     )
 
+    # # Explicitly define frames
+    # frames = []
+    # for frame_idx in range(merged_data.shape[0]):
+    #     frame = go.Frame(
+    #         data=[
+    #             go.Image(z=merged_data[frame_idx]),  # Image slice
+    #             go.Scatter(  # Triangle border
+    #                 x=boundary_points[:, 0],  # Close the loop
+    #                 y=boundary_points[:, 1],
+    #                 mode="lines",
+    #                 line=dict(color="black", width=2),
+    #             ),
+    #         ],
+    #         name=str(frame_idx),  # Frame name
+    #     )
+    #     frames.append(frame)
+
+    # # Add frames to the figure
+    # fig.frames = frames
+
     # Drop animation buttons
     fig["layout"].pop("updatemenus")
 
@@ -97,13 +137,13 @@ def display_variable(start_date, end_date, variable_name):
     fig.update_layout(
         coloraxis=dict(
             cmin=0,
-            cmax=np.max(merged_data),
+            cmax=int(np.nanmax(merged_data)) + 1,
             colorbar=dict(
                 title=(
                     "Salinity (g kg<sup>-1</sup>)"
                     if variable_name == "S"
                     else "Temperature (°C)"
-                )
+                ),
             ),
         )
     )
@@ -140,6 +180,20 @@ def display_variable(start_date, end_date, variable_name):
             }
         ],
     )
+    # # Add the border by connecting the points
+    # for frame_idx in range(merged_data.shape[0]):
+    #     fig.add_trace(
+    #         px.line(
+    #             x=boundary_points[:, 0],
+    #             y=boundary_points[:, 1],
+    #             line_shape="linear",
+    #         )
+    #         .update_traces(line=dict(color="black", width=2))
+    #         .data[0],
+    #         row=1,
+    #         col=[1, 2],
+    #         secondary_y=False,
+    #     )
 
     fig.show()
 
@@ -156,7 +210,7 @@ def display_expousure(start_date, end_date):
         The end date of the time period to display.
     """
     # Load the data
-    ds = xr.open_dataset(REL_PATH_AVERAGES)
+    ds = xr.open_dataset(URL)
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
@@ -196,7 +250,7 @@ def display_expousure(start_date, end_date):
     fig.update_layout(
         coloraxis=dict(
             cmin=0,
-            cmax=np.max(data),
+            cmax=int(np.nanmax(data)) + 1,
             colorbar=dict(title="Expousure (%)"),
         )
     )
