@@ -20,5 +20,5 @@ The environment employed for the scripts used for the visualisations is based on
 All the scripts necessary for reproducing the plots and heatmaps displayed in the notebooks are in the folder [visualisation_scripts](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/visualisation_scripts). 
 
 These notebooks are located in the folder [notebooks](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/notebooks). They can be run using any of the following instructions:
-- Mybinder.org: (link will be provided) .
+- Mybinder.org: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LOCO-EX/Aggregated_data_visualisations/main).
 - Clone or download the repository: install the packages of the file [environment.yml](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/environment.yml) and run the notebooks locally.
