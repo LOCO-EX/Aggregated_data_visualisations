@@ -19,7 +19,7 @@ def read_data_from_opendap_test():
     Read the data from the opendap server.
     """
     # Load the data
-    ds = xr.open_dataset(URL)
+    ds = xr.open_dataset(URL, engine="netcdf4")
     print(f"File from {URL_DATA} opened successfully.")
     print(ds)
     ds.close()
@@ -30,7 +30,7 @@ def display_start_end_dates():
     Display the start and end dates of the available data.
     """
     # Load the data
-    ds = xr.open_dataset(URL)
+    ds = xr.open_dataset(URL, engine="netcdf4")
 
     # Extract the start and end dates
     delta_left = timedelta(days=7.5)
@@ -62,7 +62,7 @@ def display_variable(start_date, end_date, variable_name):
         The name of the variable to display. It should be one of 'S' (salinity) or 'T' (temperature).
     """
     # Load the data
-    ds = xr.open_dataset(URL)
+    ds = xr.open_dataset(URL, engine="netcdf4")
     # bound = xr.open_dataset(BOUNDARIES_DWS)
 
     # Extract boundary points
@@ -210,7 +210,7 @@ def display_expousure(start_date, end_date):
         The end date of the time period to display.
     """
     # Load the data
-    ds = xr.open_dataset(URL)
+    ds = xr.open_dataset(URL, engine="netcdf4")
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
