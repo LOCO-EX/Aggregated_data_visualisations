@@ -78,19 +78,21 @@ def display_variable(start_date, end_date, variable_name):
     st_index = np.argmax(
         time_steps - delta_left >= start_date
     )  # inlcude the start date
-    end_index = np.argmin(time_steps + delta_right <= end_date)  # include the end date
+    end_index = np.argmin(
+        time_steps + delta_right <= end_date
+    )  # do not include the end date
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)
     avg = (
-        np.flip(ds["S_avg"].values[st_index : end_index + 1], axis=1)
+        ds["S_avg"].values[st_index:end_index]
         if variable_name == "S"
-        else np.flip(ds["T_avg"].values[st_index : end_index + 1], axis=1)
+        else ds["T_avg"].values[st_index:end_index]
     )
     sd = (
-        np.flip(ds["S_sd"].values[st_index : end_index + 1], axis=1)
+        ds["S_sd"].values[st_index:end_index]
         if variable_name == "S"
-        else np.flip(ds["T_sd"].values[st_index : end_index + 1], axis=1)
+        else ds["T_sd"].values[st_index:end_index]
     )
     # Add border to avg and sd respectively
 
@@ -106,6 +108,7 @@ def display_variable(start_date, end_date, variable_name):
         y=ds["yc"].values,
         facet_col=1,
         animation_frame=0,
+        origin="lower",
         title=("Salinity" if variable_name == "S" else "Temperature")
         + " : 15 days average (in facet_col=0) and standard deviation (in facet_col=1)",
     )
@@ -155,7 +158,7 @@ def display_variable(start_date, end_date, variable_name):
                 f"xaxis{i}": dict(title="xc", tickformat=".1f"),
             },
             **{
-                f"yaxis{i}": dict(title="yc", autorange="reversed", tickformat=".1f"),
+                f"yaxis{i}": dict(title="yc", tickformat=".1f"),
             },
         )
 
@@ -222,11 +225,13 @@ def display_expousure(start_date, end_date):
     st_index = np.argmax(
         time_steps - delta_left >= start_date
     )  # inlcude the start date
-    end_index = np.argmin(time_steps + delta_right <= end_date)  # include the end date
+    end_index = np.argmin(
+        time_steps + delta_right <= end_date
+    )  # do not include the end date
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)
-    data = np.flip(ds["exp_pct"].values[st_index : end_index + 1], axis=1)
+    data = ds["exp_pct"].values[st_index:end_index]
 
     time_steps_update = time_steps[st_index:end_index]
 
@@ -238,6 +243,7 @@ def display_expousure(start_date, end_date):
         x=ds["xc"].values,
         y=ds["yc"].values,
         animation_frame=0,
+        origin="lower",
         title="Expousure percentage : for each point expousure percentage for 15 days",
         width=800,
         height=500,
@@ -261,7 +267,6 @@ def display_expousure(start_date, end_date):
         yaxis=dict(
             title="yc",
             tickformat=".1f",
-            autorange="reversed",
         ),
     )
 
