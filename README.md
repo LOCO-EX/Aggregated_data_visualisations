@@ -21,4 +21,5 @@ All the scripts necessary for reproducing the plots and heatmaps displayed in th
 
 These notebooks are located in the folder [notebooks](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/notebooks). They can be run using any of the following instructions:
 - Mybinder.org: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LOCO-EX/Aggregated_data_visualisations/main).
+- Google Colab: follow the instructions from the notebook [clone_repo_using_google_colab.ipynb](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/clone_repo_using_google_colab.ipynb).
 - Clone or download the repository: install the packages of the file [environment.yml](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/environment.yml) and run the notebooks locally.
