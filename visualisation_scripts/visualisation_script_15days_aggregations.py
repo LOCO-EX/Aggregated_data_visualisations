@@ -6,9 +6,9 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-### Constants
+### Global variables
 BOUNDARIES_DWS = "data/dws_boundaries_contour0.nc"
-URL = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"  # change for your folder with data if run locally
+DATA = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"  # change for your folder with data if run locally
 URL_DATA = "https://opendap.4tu.nl/thredds/catalog/data2/test/spatial/catalog.html"
 LOCAL = False
 
@@ -19,7 +19,7 @@ def read_data_from_opendap_test():
     Read the data from the opendap server.
     """
     # Load the data
-    ds = xr.open_dataset(URL, engine="netcdf4")
+    ds = xr.open_dataset(DATA, engine="netcdf4")
     print(f"File from {URL_DATA} opened successfully.")
     print(ds)
     ds.close()
@@ -30,7 +30,7 @@ def display_start_end_dates():
     Display the start and end dates of the available data.
     """
     # Load the data
-    ds = xr.open_dataset(URL, engine="netcdf4")
+    ds = xr.open_dataset(DATA, engine="netcdf4")
 
     # Extract the start and end dates
     delta_left = timedelta(days=7.5)
@@ -62,7 +62,7 @@ def display_variable(start_date, end_date, variable_name):
         The name of the variable to display. It should be one of 'S' (salinity) or 'T' (temperature).
     """
     # Load the data
-    ds = xr.open_dataset(URL, engine="netcdf4")
+    ds = xr.open_dataset(DATA, engine="netcdf4")
     if LOCAL:
         bound = xr.open_dataset(BOUNDARIES_DWS)
 
@@ -207,7 +207,7 @@ def display_expousure(start_date, end_date):
         The end date of the time period to display.
     """
     # Load the data
-    ds = xr.open_dataset(URL, engine="netcdf4")
+    ds = xr.open_dataset(DATA, engine="netcdf4")
     if LOCAL:
         bound = xr.open_dataset(BOUNDARIES_DWS)
 
