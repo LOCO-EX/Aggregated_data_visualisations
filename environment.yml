@@ -13,5 +13,3 @@ dependencies:
   - pip:
       - dash[jupyterlab]
       - plotly
-postBuild:
-  - jupyter lab build
