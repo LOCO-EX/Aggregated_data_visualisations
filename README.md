@@ -1,7 +1,7 @@
 ## Aggregated_data_visualisations
 This repository contains jupyter notebooks for visualisations of spatial and 15-days aggregations made for the Dutch Wadden Sea (DWS) related variables, and also volume flux of rivers connected to the Dutch Wadden Sea.
 
-*Visualisations can be found in [visualisations.ipynb](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/notebooks/visualisations.ipynb) notebook which include:*
+*Visualisations can be found in [visualisations.ipynb](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/notebooks/visualisations.ipynb) notebook that include:*
 - The volume, average and standard deviation of salinity and temperature variables for the whole area of the Dutch Wadden Sea each hour.
 - The 15 days average and standard deviation of salinity and temperature variables for each point of the Dutch Wadden Sea, and the expousure percentage.
 - The volume flux of the rivers.
