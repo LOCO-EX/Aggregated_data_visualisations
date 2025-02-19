@@ -7,10 +7,10 @@ import pandas as pd
 import plotly.graph_objects as go
 
 ### Constants
-# REL_PATH_AVERAGES = "data/15_days_avg_std.nc"
-# BOUNDARIES_DWS = "data/dws_boundaries_contour0.nc"
-URL = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"
+BOUNDARIES_DWS = "data/dws_boundaries_contour0.nc"
+URL = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"  # change for your folder with data if run locally
 URL_DATA = "https://opendap.4tu.nl/thredds/catalog/data2/test/spatial/catalog.html"
+LOCAL = False
 
 
 ### Functions
@@ -63,40 +63,39 @@ def display_variable(start_date, end_date, variable_name):
     """
     # Load the data
     ds = xr.open_dataset(URL, engine="netcdf4")
-    # bound = xr.open_dataset(BOUNDARIES_DWS)
+    if LOCAL:
+        bound = xr.open_dataset(BOUNDARIES_DWS)
 
-    # Extract boundary points
-    # boundary_points = bound.bdr_dws.values
+        # Extract boundary points
+        boundary_points = bound.bdr_dws.values
+        bound.close()
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
     delta_right = timedelta(days=7.5) - timedelta(
-        hours=2
+        hours=1
     )  # so as to show the exact period
     time_steps = ds["time"].values
     time_steps = pd.to_datetime(time_steps)
-    st_index = np.argmax(
-        time_steps - delta_left >= start_date
-    )  # inlcude the start date
-    end_index = np.argmin(
+    mask_ind = (time_steps - delta_left >= start_date) & (
         time_steps + delta_right <= end_date
-    )  # do not include the end date
+    )
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)
     avg = (
-        ds["S_avg"].values[st_index:end_index]
+        ds["S_avg"].values[mask_ind]
         if variable_name == "S"
-        else ds["T_avg"].values[st_index:end_index]
+        else ds["T_avg"].values[mask_ind]
     )
     sd = (
-        ds["S_sd"].values[st_index:end_index]
+        ds["S_sd"].values[mask_ind]
         if variable_name == "S"
-        else ds["T_sd"].values[st_index:end_index]
+        else ds["T_sd"].values[mask_ind]
     )
     # Add border to avg and sd respectively
 
-    time_steps_update = time_steps[st_index:end_index]
+    time_steps_update = time_steps[mask_ind]
     merged_data = np.stack([avg, sd], axis=1)
 
     ds.close()
@@ -113,25 +112,34 @@ def display_variable(start_date, end_date, variable_name):
         + " : 15 days average (in facet_col=0) and standard deviation (in facet_col=1)",
     )
 
-    # # Explicitly define frames
-    # frames = []
-    # for frame_idx in range(merged_data.shape[0]):
-    #     frame = go.Frame(
-    #         data=[
-    #             go.Image(z=merged_data[frame_idx]),  # Image slice
-    #             go.Scatter(  # Triangle border
-    #                 x=boundary_points[:, 0],  # Close the loop
-    #                 y=boundary_points[:, 1],
-    #                 mode="lines",
-    #                 line=dict(color="black", width=2),
-    #             ),
-    #         ],
-    #         name=str(frame_idx),  # Frame name
-    #     )
-    #     frames.append(frame)
+    if LOCAL:
+        # Add boundary to the first facet
+        fig.add_trace(
+            go.Scatter(
+                x=boundary_points[:, 0],
+                y=boundary_points[:, 1],
+                mode="lines",
+                line=dict(color="black", width=2),
+                name="",
+                showlegend=False,
+            ),
+            row=1,  # First facet
+            col=1,
+        )
 
-    # # Add frames to the figure
-    # fig.frames = frames
+        # Add boundary to the second facet
+        fig.add_trace(
+            go.Scatter(
+                x=boundary_points[:, 0],
+                y=boundary_points[:, 1],
+                mode="lines",
+                line=dict(color="black", width=2),
+                name="",
+                showlegend=False,
+            ),
+            row=1,  # Second facet
+            col=2,
+        )
 
     # Drop animation buttons
     fig["layout"].pop("updatemenus")
@@ -183,20 +191,6 @@ def display_variable(start_date, end_date, variable_name):
             }
         ],
     )
-    # # Add the border by connecting the points
-    # for frame_idx in range(merged_data.shape[0]):
-    #     fig.add_trace(
-    #         px.line(
-    #             x=boundary_points[:, 0],
-    #             y=boundary_points[:, 1],
-    #             line_shape="linear",
-    #         )
-    #         .update_traces(line=dict(color="black", width=2))
-    #         .data[0],
-    #         row=1,
-    #         col=[1, 2],
-    #         secondary_y=False,
-    #     )
 
     fig.show()
 
@@ -214,26 +208,29 @@ def display_expousure(start_date, end_date):
     """
     # Load the data
     ds = xr.open_dataset(URL, engine="netcdf4")
+    if LOCAL:
+        bound = xr.open_dataset(BOUNDARIES_DWS)
+
+        # Extract boundary points
+        boundary_points = np.flip(bound.bdr_dws.values, axis=0)
+        bound.close()
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
     delta_right = timedelta(days=7.5) - timedelta(
-        hours=2
+        hours=1
     )  # so as to show the exact period
     time_steps = ds["time"].values
     time_steps = pd.to_datetime(time_steps)
-    st_index = np.argmax(
-        time_steps - delta_left >= start_date
-    )  # inlcude the start date
-    end_index = np.argmin(
+    mask_ind = (time_steps - delta_left >= start_date) & (
         time_steps + delta_right <= end_date
-    )  # do not include the end date
+    )
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)
-    data = ds["exp_pct"].values[st_index:end_index]
+    data = ds["exp_pct"].values[mask_ind]
 
-    time_steps_update = time_steps[st_index:end_index]
+    time_steps_update = time_steps[mask_ind]
 
     ds.close()
 
@@ -248,6 +245,21 @@ def display_expousure(start_date, end_date):
         width=800,
         height=500,
     )
+
+    if LOCAL:
+        # Add boundary to the facet
+        fig.add_trace(
+            go.Scatter(
+                x=boundary_points[:, 0],
+                y=boundary_points[:, 1],
+                mode="lines",
+                line=dict(color="black", width=2),
+                name="",
+                showlegend=False,
+            ),
+            row=1,
+            col=1,
+        )
 
     # Drop animation buttons
     fig["layout"].pop("updatemenus")
