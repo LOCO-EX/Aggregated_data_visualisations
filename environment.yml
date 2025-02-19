@@ -1,4 +1,4 @@
-name: env_dws_v
+name: dws_visualisations
 channels:
   - conda-forge
 dependencies:
@@ -7,5 +7,11 @@ dependencies:
   - xarray
   - pip
   - plotly-resampler
-  - plotly
   - netCDF4
+  - jupyterlab
+  - pip
+  - pip:
+      - dash[jupyterlab]
+      - plotly
+postBuild:
+  - jupyter lab build
