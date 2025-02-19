@@ -6,5 +6,6 @@ dependencies:
   - numpy
   - xarray
   - pip
+  - plotly-resampler
   - plotly
   - netCDF4
