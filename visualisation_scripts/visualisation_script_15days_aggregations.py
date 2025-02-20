@@ -176,9 +176,9 @@ def display_variable(start_date, end_date, variable_name):
     fig.show()
 
 
-def display_expousure(start_date, end_date):
+def display_exposure(start_date, end_date):
     """
-    Display the expousure for 15 days in the chosen time period.
+    Display the exposure for 15 days in the chosen time period.
     The data is displayed in a plotly figure with a slider to navigate through the time steps.
 
     Parameters:
@@ -218,7 +218,7 @@ def display_expousure(start_date, end_date):
         y=ds["yc"].values,
         animation_frame=0,
         origin="lower",
-        title="Expousure percentage : for each point expousure percentage for 15 days",
+        title="Exposure percentage : for each point exposure percentage for 15 days",
         width=800,
         height=500,
     )
@@ -246,7 +246,7 @@ def display_expousure(start_date, end_date):
         coloraxis=dict(
             cmin=0,
             cmax=int(np.nanmax(data)) + 1,
-            colorbar=dict(title="Expousure (%)"),
+            colorbar=dict(title="Exposure (%)"),
         )
     )
 
