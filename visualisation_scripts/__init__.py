@@ -1,5 +1,5 @@
 from .visualisation_script_15days_aggregations import (
-    display_expousure,
+    display_exposure,
     display_start_end_dates,
     display_variable,
     read_data_from_opendap_test,
@@ -14,6 +14,6 @@ __all__ = [
     "plot_volume_flux",
     "display_start_end_dates",
     "display_variable",
-    "display_expousure",
+    "display_exposure",
     "read_data_from_opendap_test",
 ]
