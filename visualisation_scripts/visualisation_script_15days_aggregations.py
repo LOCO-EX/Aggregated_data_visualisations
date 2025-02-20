@@ -35,13 +35,17 @@ def display_start_end_dates():
 
     # Extract the start and end dates
     delta_left = timedelta(days=7.5)
-    delta_right = timedelta(days=7.5) - timedelta(hours=1)  # so as to show the exact period in days
+    delta_right = timedelta(days=7.5) - timedelta(
+        hours=1
+    )  # so as to show the exact period in days
     start_date = pd.to_datetime(pd.to_datetime(ds["time"].values[0]) - delta_left)
     end_date = pd.to_datetime(pd.to_datetime(ds["time"].values[-1]) + delta_right)
 
     ds.close()
 
-    print(f"The time slots of the simulation are from {start_date} (including) to {end_date} (including).")
+    print(
+        f"The time slots of the simulation are from {start_date} (including) to {end_date} (including)."
+    )
     print("Please choose a time period within these dates.")
 
 
@@ -69,15 +73,27 @@ def display_variable(start_date, end_date, variable_name):
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
-    delta_right = timedelta(days=7.5) - timedelta(hours=1)  # so as to show the exact period
+    delta_right = timedelta(days=7.5) - timedelta(
+        hours=1
+    )  # so as to show the exact period
     time_steps = ds["time"].values
     time_steps = pd.to_datetime(time_steps)
-    mask_ind = (time_steps - delta_left >= start_date) & (time_steps + delta_right <= end_date)
+    mask_ind = (time_steps - delta_left >= start_date) & (
+        time_steps + delta_right <= end_date
+    )
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)
-    avg = ds["S_avg"].values[mask_ind] if variable_name == "S" else ds["T_avg"].values[mask_ind]
-    sd = ds["S_sd"].values[mask_ind] if variable_name == "S" else ds["T_sd"].values[mask_ind]
+    avg = (
+        ds["S_avg"].values[mask_ind]
+        if variable_name == "S"
+        else ds["T_avg"].values[mask_ind]
+    )
+    sd = (
+        ds["S_sd"].values[mask_ind]
+        if variable_name == "S"
+        else ds["T_sd"].values[mask_ind]
+    )
     # Add border to avg and sd respectively
 
     time_steps_update = time_steps[mask_ind]
@@ -135,7 +151,11 @@ def display_variable(start_date, end_date, variable_name):
             cmin=0,
             cmax=int(np.nanmax(merged_data)) + 1,
             colorbar=dict(
-                title=("Salinity (g kg<sup>-1</sup>)" if variable_name == "S" else "Temperature (°C)"),
+                title=(
+                    "Salinity (g kg<sup>-1</sup>)"
+                    if variable_name == "S"
+                    else "Temperature (°C)"
+                ),
             ),
         )
     )
@@ -198,10 +218,14 @@ def display_exposure(start_date, end_date):
 
     # Find the indices of the time steps that correspond to the chosen dates
     delta_left = timedelta(days=7.5)
-    delta_right = timedelta(days=7.5) - timedelta(hours=1)  # so as to show the exact period
+    delta_right = timedelta(days=7.5) - timedelta(
+        hours=1
+    )  # so as to show the exact period
     time_steps = ds["time"].values
     time_steps = pd.to_datetime(time_steps)
-    mask_ind = (time_steps - delta_left >= start_date) & (time_steps + delta_right <= end_date)
+    mask_ind = (time_steps - delta_left >= start_date) & (
+        time_steps + delta_right <= end_date
+    )
 
     # Extract the data and flip the arrays so that the origin is at the bottom left
     # (y axis is inverted later beacuse of the way plotly displays the data)

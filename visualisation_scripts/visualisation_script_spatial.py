@@ -31,12 +31,18 @@ def plot_volume(path_root: str | Path):
     ds_volume = xr.open_dataset(path_root / REL_PATH_VOLUME)
 
     fig = FigureResampler(go.Figure())
-    fig.add_trace(go.Scattergl(y=ds_volume["volume"].values, x=ds_volume["time"].values))
+    fig.add_trace(
+        go.Scattergl(y=ds_volume["volume"].values, x=ds_volume["time"].values)
+    )
 
     layout = dict(
         title="Volume in the DWS",
         yaxis=dict(title=dict(text="Volume (m<sup>3</sup>)")),
-        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
+        xaxis=dict(
+            title=dict(text="Date"),
+            rangeslider_visible=True,
+            rangeselector=xaxes_buttons(),
+        ),
         hovermode="x",
     )
     fig.update_layout(layout)
@@ -53,7 +59,11 @@ def plot_temperature(path_root: str | Path):
 
     layout = dict(
         yaxis=dict(title=dict(text="Temperature (°C)")),
-        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
+        xaxis=dict(
+            title=dict(text="Date"),
+            rangeslider_visible=True,
+            rangeselector=xaxes_buttons(),
+        ),
         hovermode="x",
         updatemenus=[
             dict(
@@ -125,7 +135,11 @@ def plot_salinity(path_root: str | Path):
 
     layout = dict(
         yaxis=dict(title=dict(text="Salinity (g kg<sup>-1</sup>)")),
-        xaxis=dict(title=dict(text="Date"), rangeslider_visible=True, rangeselector=xaxes_buttons()),
+        xaxis=dict(
+            title=dict(text="Date"),
+            rangeslider_visible=True,
+            rangeselector=xaxes_buttons(),
+        ),
         hovermode="x",
         updatemenus=[
             dict(

@@ -53,7 +53,9 @@ def plot_volume_flux(path_root: str | Path):
             "visible": "legendonly",
         }
 
-        if (np_station_names[i] == "Denoever") | (np_station_names[i] == "Kornwerderzand"):
+        if (np_station_names[i] == "Denoever") | (
+            np_station_names[i] == "Kornwerderzand"
+        ):
             fig_data_dict.update(visible=True)
 
         fig.add_trace(go.Scattergl(fig_data_dict), hf_x=np_time, hf_y=np_flux)
