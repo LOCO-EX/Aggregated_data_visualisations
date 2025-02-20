@@ -10,7 +10,7 @@ from plotly.express.colors import qualitative
 from plotly_resampler import FigureResampler
 
 COLOUR_PALET = qualitative.Dark24
-REL_PATH_RIVERS = Path("TIMESERIES_RIVERS/rivers_volume_flux.nc")
+REL_PATH_RIVERS = Path("OUTPUT/rivers_volume_flux.nc")
 
 
 def xaxes_buttons():
@@ -22,13 +22,12 @@ def xaxes_buttons():
                 dict(count=1, label="1y", step="year", stepmode="backward"),
                 dict(count=5, label="5y", step="year", stepmode="backward"),
                 dict(count=10, label="10y", step="year", stepmode="backward"),
-                # dict(step="all"),
             ]
         )
     )
 
 
-def plot_volume_flux(path_root: str | Path):
+def plot_rivers_volume_flux(path_root: str | Path):
     # Open the netCDF file
     ds_flux = xr.open_dataset(path_root / REL_PATH_RIVERS)
 
@@ -67,7 +66,6 @@ def plot_volume_flux(path_root: str | Path):
         xaxis=dict(
             title=dict(text="Date"),
             rangeselector=xaxes_buttons(),
-            rangeslider={"visible": True},
         ),
         hovermode="closest",
         legend={"title": {"text": "Inlet"}, "tracegroupgap": 0},
