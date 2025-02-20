@@ -48,15 +48,22 @@ def plot_volume(path_root: str | Path):
     return fig
 
 
-def plot_temperature(path_root: str | Path):
-    ds_temperature = xr.open_dataset(path_root / REL_PATH_AGGREGATES_T)
+def get_fig_spatial(var_name: str, path: Path):
+    ds_aggregate = xr.open_dataset(path)
 
-    T_mean = ds_temperature["T_mean"].values
-    T_std = ds_temperature["T_std"].values
-    time = ds_temperature["time"].values
+    if var_name == "salinity":
+        var_mean = ds_aggregate["S_mean"].values
+        var_std = ds_aggregate["S_std"].values
+    elif var_name == "temperature":
+        var_mean = ds_aggregate["T_mean"].values
+        var_std = ds_aggregate["T_std"].values
+    else:
+        print("Error")
+        quit()
+
+    time = ds_aggregate["time"].values
 
     layout = dict(
-        yaxis=dict(title=dict(text="Temperature (°C)")),
         xaxis=dict(
             title=dict(text="Date"),
             rangeslider_visible=True,
@@ -91,16 +98,16 @@ def plot_temperature(path_root: str | Path):
     fig = go.Figure(
         data=[
             go.Scatter(
-                name="Average temperature",
+                name=f"Average {var_name}",
                 x=time,
-                y=T_mean,
+                y=var_mean,
                 mode="lines",
                 line=dict(color="rgb(31, 119, 180)"),
             ),
             go.Scatter(
                 name="Upper Bound",
                 x=time,
-                y=T_mean + T_std,
+                y=var_mean + var_std,
                 mode="lines",
                 marker=dict(color="#444"),
                 line=dict(width=0),
@@ -109,10 +116,10 @@ def plot_temperature(path_root: str | Path):
             go.Scatter(
                 name="Lower Bound",
                 x=time,
-                y=T_mean - T_std,
+                y=var_mean - var_std,
+                mode="lines",
                 marker=dict(color="#444"),
                 line=dict(width=0),
-                mode="lines",
                 fillcolor="rgba(68, 68, 68, 0.3)",
                 fill="tonexty",
                 showlegend=False,
@@ -124,78 +131,20 @@ def plot_temperature(path_root: str | Path):
     return fig
 
 
+def plot_temperature(path_root: str | Path):
+    var_name = "temperature"
+
+    fig = get_fig_spatial(var_name, (path_root / REL_PATH_AGGREGATES_T).resolve())
+    fig.update_layout({"yaxis": dict(title=dict(text="Temperature (°C)"))})
+
+    return fig
+
+
 def plot_salinity(path_root: str | Path):
-    ds_salinity = xr.open_dataset(path_root / REL_PATH_AGGREGATES_S)
+    var_name = "salinity"
 
-    S_mean = ds_salinity["S_mean"].values
-    S_std = ds_salinity["S_std"].values
-    time = ds_salinity["time"].values
-
-    layout = dict(
-        yaxis=dict(title=dict(text="Salinity (g kg<sup>-1</sup>)")),
-        xaxis=dict(
-            title=dict(text="Date"),
-            rangeslider_visible=True,
-            rangeselector=xaxes_buttons(),
-        ),
-        hovermode="x",
-        updatemenus=[
-            dict(
-                type="buttons",
-                direction="left",
-                buttons=list(
-                    [
-                        dict(
-                            method="restyle",
-                            label="Toggle uncertainty",
-                            visible=True,
-                            args=[{"visible": True}, [1, 2]],
-                            args2=[{"visible": "legendonly"}, [1, 2]],
-                        ),
-                    ]
-                ),
-                pad={"r": 10, "t": 10},
-                showactive=True,
-                x=1.08,
-                xanchor="center",
-                y=0.6,
-                yanchor="middle",
-            ),
-        ],
-    )
-
-    fig = go.Figure(
-        data=[
-            go.Scatter(
-                name="Average salinity",
-                x=time,
-                y=S_mean,
-                mode="lines",
-                line=dict(color="rgb(31, 119, 180)"),
-            ),
-            go.Scatter(
-                name="Upper Bound",
-                x=time,
-                y=S_mean + S_std,
-                mode="lines",
-                marker=dict(color="#444"),
-                line=dict(width=0),
-                showlegend=False,
-            ),
-            go.Scatter(
-                name="Lower Bound",
-                x=time,
-                y=S_mean - S_std,
-                mode="lines",
-                marker=dict(color="#444"),
-                line=dict(width=0),
-                fillcolor="rgba(68, 68, 68, 0.3)",
-                fill="tonexty",
-                showlegend=False,
-            ),
-        ],
-        layout=layout,
-    )
+    fig = get_fig_spatial(var_name, (path_root / REL_PATH_AGGREGATES_S).resolve())
+    fig.update_layout({"yaxis": dict(title=dict(text="Salinity (g kg<sup>-1</sup>)"))})
 
     return fig
 
