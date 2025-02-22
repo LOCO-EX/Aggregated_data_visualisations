@@ -8,7 +8,7 @@ dependencies:
   - pip
   - plotly-resampler
   - netCDF4
-  - jupyterlab
+  - jupyterlab>=4.0  # Ensure JupyterLab is up-to-date
   - pip
   - pip:
       - dash[jupyterlab]
