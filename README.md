@@ -17,7 +17,7 @@ The environment employed for the scripts used for the visualisations is based on
 
 
 ### Running the Notebooks
-All the scripts necessary for reproducing the plots and heatmaps displayed in the notebooks are in the folder [visualisation_scripts](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/visualisation_scripts). [postBuild.sh](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/postBuild.sh) file is used for Binder and can be ignored when running locally or in Google Colab.
+All the scripts necessary for reproducing the plots and heatmaps displayed in the notebooks are in the folder [visualisation_scripts](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/visualisation_scripts). A file [postBuild.sh](https://github.com/LOCO-EX/Aggregated_data_visualisations/blob/main/postBuild.sh) is used for Binder and can be ignored when running locally or in Google Colab.
 
 These notebooks are located in the folder [notebooks](https://github.com/LOCO-EX/Aggregated_data_visualisations/tree/main/notebooks). They can be run using any of the following instructions:
 - Mybinder.org: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LOCO-EX/Aggregated_data_visualisations/main). When running in Binder, *Cancel* build recommendation if it appears with a suggestion *@plotly/dash-jupyterlab needs to be included in build*.
