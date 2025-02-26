@@ -6,10 +6,10 @@ dependencies:
   - numpy
   - xarray
   - pip
-  - plotly-resampler
   - netCDF4
   - jupyterlab>=4.0  # Ensure JupyterLab is up-to-date
   - pip
   - pip:
       - dash[jupyterlab]
       - plotly
+      - plotly-resampler
