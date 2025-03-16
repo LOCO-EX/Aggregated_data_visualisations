@@ -172,3 +172,4 @@ cython_debug/
 
 # additonal
 notebooks/data/
+notebooks/test_*
