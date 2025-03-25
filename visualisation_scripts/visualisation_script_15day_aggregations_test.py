@@ -8,8 +8,8 @@ import plotly.graph_objects as go
 import xarray as xr
 
 ### Global variables
-BOUNDARIES_DWS = "data/dws_boundaries_contour0.nc"
-DATA = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"  # change for your folder with data if run locally
+BOUNDARIES_DWS = ""
+REL_PATH = "https://opendap.4tu.nl/thredds/dodsC/data2/test/spatial/15_days_avg_std.nc"  # change for your folder with data if run locally
 URL_DATA = "https://opendap.4tu.nl/thredds/catalog/data2/test/spatial/catalog.html"
 LOCAL = False
 
@@ -20,18 +20,18 @@ def read_data_from_opendap_test():
     Read the data from the opendap server.
     """
     # Load the data
-    ds = xr.open_dataset(DATA, engine="netcdf4")
+    ds = xr.open_dataset(REL_PATH, engine="netcdf4")
     print(f"File from {URL_DATA} opened successfully.")
     print(ds)
     ds.close()
 
 
-def display_start_end_dates():
+def display_start_end_dates_test():
     """
     Display the start and end dates of the available data.
     """
     # Load the data
-    ds = xr.open_dataset(DATA, engine="netcdf4")
+    ds = xr.open_dataset(REL_PATH, engine="netcdf4")
 
     # Extract the start and end dates
     delta_left = timedelta(days=7.5)
@@ -49,7 +49,7 @@ def display_start_end_dates():
     print("Please choose a time period within these dates.")
 
 
-def display_variable(start_date, end_date, variable_name):
+def display_variable_test(start_date, end_date, variable_name):
     """
     Display the 15 days average and standard deviation of the chosen variable in the chosen time period.
     The data is displayed in a plotly figure with a slider to navigate through the time steps.
@@ -63,7 +63,7 @@ def display_variable(start_date, end_date, variable_name):
         The name of the variable to display. It should be one of 'S' (salinity) or 'T' (temperature).
     """
     # Load the data
-    ds = xr.open_dataset(DATA, engine="netcdf4")
+    ds = xr.open_dataset(REL_PATH, engine="netcdf4")
     if LOCAL:
         bound = xr.open_dataset(BOUNDARIES_DWS)
 
@@ -196,7 +196,7 @@ def display_variable(start_date, end_date, variable_name):
     fig.show()
 
 
-def display_exposure(start_date, end_date):
+def display_exposure_test(start_date, end_date):
     """
     Display the exposure for 15 days in the chosen time period.
     The data is displayed in a plotly figure with a slider to navigate through the time steps.
@@ -208,7 +208,7 @@ def display_exposure(start_date, end_date):
         The end date of the time period to display.
     """
     # Load the data
-    ds = xr.open_dataset(DATA, engine="netcdf4")
+    ds = xr.open_dataset(REL_PATH, engine="netcdf4")
     if LOCAL:
         bound = xr.open_dataset(BOUNDARIES_DWS)
 
@@ -242,7 +242,7 @@ def display_exposure(start_date, end_date):
         y=ds["yc"].values,
         animation_frame=0,
         origin="lower",
-        title="Exposure percentage : for each point exposure percentage for 15 days",
+        title="Exposure rate (%) : for each point exposure rate for 15 days",
         width=800,
         height=500,
     )

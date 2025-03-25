@@ -4,9 +4,10 @@ channels:
 dependencies:
   - python=3.12
   - numpy
+  - pandas
+  - pyproj
   - xarray
   - pip
-  - netCDF4
   - jupyterlab>=4.0  # Ensure JupyterLab is up-to-date
   - pip
   - pip:
