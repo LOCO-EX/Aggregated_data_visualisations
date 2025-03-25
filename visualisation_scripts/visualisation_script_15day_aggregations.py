@@ -209,6 +209,7 @@ def display_variable(start_date, end_date, variable_name, path_root: str | Path)
         title=("Salinity" if variable_name == "S" else "Temperature")
         + " : 15 days average (in facet_col=0) and standard deviation (in facet_col=1)",
     )
+    fig.update_layout(width=1000, height=600)
 
     # Add boundary to the first facet
     fig.add_trace(
