@@ -10,6 +10,7 @@ dependencies:
   - pip
   - jupyterlab>=4.0  # Ensure JupyterLab is up-to-date
   - pip
+  - netcdf4
   - pip:
       - dash[jupyterlab]
       - plotly
