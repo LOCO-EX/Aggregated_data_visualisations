@@ -7,9 +7,9 @@ import plotly.graph_objects as go
 import xarray as xr
 from plotly_resampler import FigureResampler
 
-REL_PATH_VOLUME = Path("OUTPUT/DWS.volume.20000101-20001201.nc")
-REL_PATH_AGGREGATES_S = Path("OUTPUT/DWS200m.aggregates.S.20000101-20001201.nc")
-REL_PATH_AGGREGATES_T = Path("OUTPUT/DWS200m.aggregates.T.20000101-20001201.nc")
+REL_PATH_VOLUME = Path("output_files/DWS.volume.nc")
+REL_PATH_AGGREGATES_S = Path("output_files/DWS200m.spatial_aggregates.S.nc")
+REL_PATH_AGGREGATES_T = Path("output_files/DWS200m.spatial_aggregates.T.nc")
 
 
 def xaxes_buttons():

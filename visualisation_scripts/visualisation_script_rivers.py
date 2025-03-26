@@ -10,7 +10,7 @@ from plotly.express.colors import qualitative
 from plotly_resampler import FigureResampler
 
 COLOUR_PALET = qualitative.Dark24
-REL_PATH_RIVERS = Path("OUTPUT/rivers_volume_flux.nc")
+REL_PATH_RIVERS = Path("output_files/rivers_volume_flux.nc")
 
 
 def xaxes_buttons():

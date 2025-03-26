@@ -10,10 +10,8 @@ import xarray as xr
 from pyproj import Transformer
 
 ### Global variables
-REL_PATH_BOUNDARIES_DWS = "OUTPUT//DWS200m.boundary_area.nc"
-REL_PATH = (
-    "OUTPUT//15day.aggregates.rt.nc"  # change for your folder with data if run locally
-)
+REL_PATH_BOUNDARIES_DWS = "output_files//DWS200m.boundary_area.nc"
+REL_PATH = "output_files//15day_aggregates.rt.nc"  # change for your folder with data if run locally
 
 
 def display_start_end_dates(path_root: str | Path):

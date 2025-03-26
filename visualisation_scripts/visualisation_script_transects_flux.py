@@ -8,7 +8,7 @@ import xarray as xr
 from plotly.express.colors import qualitative
 
 COLOUR_PALET = qualitative.Dark24
-REL_PATH_RIVERS = Path("OUTPUT/rivers_volume_flux.nc")
+REL_PATH_RIVERS = Path("output_files/rivers_volume_flux.nc")
 
 
 def xaxes_buttons():
@@ -27,7 +27,7 @@ def xaxes_buttons():
 
 def get_transect_flux(path_root: str, variable: str):
     ds_flux = xr.open_dataset(
-        (Path(path_root) / "OUTPUT/TR.volume_salt_flux.nc").resolve()
+        (Path(path_root) / "output_files/TR.volume_salt_flux.nc").resolve()
     )
 
     fig = px.line(
