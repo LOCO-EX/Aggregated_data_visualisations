@@ -266,23 +266,38 @@ def display_variable(start_date, end_date, variable_name, path_root: str | Path)
     )
 
     # Modify the layout x and y axis
-    for i in range(1, merged_data.shape[1] + 1):
-        fig.update_layout(
-            **{
-                f"xaxis{i}": dict(
-                    title="Easting (km)",
-                    tickvals=[0, 200, 400, 600, 800, 1000, 1200],  # Locations of ticks
-                    ticktext=[0, 20, 40, 60, 80, 100, 120],
-                ),
-            },
-            **{
-                f"yaxis{i}": dict(
-                    title="Northing (km)",
-                    tickvals=[0, 200, 400, 600, 800],  # Locations of ticks
-                    ticktext=[0, 20, 40, 60, 80],
-                ),
-            },
-        )
+    fig.update_layout(
+        **{
+            f"xaxis{1}": dict(
+                title="Easting (km)",
+                tickvals=[0, 200, 400, 600, 800, 1000, 1200],  # Locations of ticks
+                ticktext=[0, 20, 40, 60, 80, 100, 120],
+            ),
+        },
+        **{
+            f"yaxis{1}": dict(
+                title="Northing (km)",
+                tickvals=[0, 200, 400, 600, 800],  # Locations of ticks
+                ticktext=[0, 20, 40, 60, 80],
+            ),
+        },
+    )
+    fig.update_layout(
+        **{
+            f"xaxis{2}": dict(
+                title="Easting (km)",
+                tickvals=[0, 200, 400, 600, 800, 1000, 1200],  # Locations of ticks
+                ticktext=[0, 20, 40, 60, 80, 100, 120],
+            ),
+        },
+        **{
+            f"yaxis{2}": dict(
+                title="",
+                tickvals=[0, 200, 400, 600, 800],  # Locations of ticks
+                ticktext=[0, 20, 40, 60, 80],
+            ),
+        },
+    )
 
     # Add slider
     fig.update_layout(

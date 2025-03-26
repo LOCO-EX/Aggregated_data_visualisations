@@ -113,6 +113,8 @@ def display_variable_test(start_date, end_date, variable_name):
         + " : 15 days average (in facet_col=0) and standard deviation (in facet_col=1)",
     )
 
+    fig.update_layout(width=1000, height=600)
+
     if LOCAL:
         # Add boundary to the first facet
         fig.add_trace(
